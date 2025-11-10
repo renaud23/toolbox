@@ -1,0 +1,6 @@
+{
+  "client_id": "localhost-frontend",
+  "scope": "openid profile email offline_access",
+  "authority": "https://auth.insee.test/auth/realms/agents-insee-interne",
+  "service_worker_only": false
+}
