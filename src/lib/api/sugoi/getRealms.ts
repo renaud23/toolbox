@@ -3,6 +3,7 @@ import { gerRealmsUri } from './uri'
 export type Realm = {
   name: string
   url: string
+  userStorages: Array<{ name: string }>
 }
 
 export function getRealms(sugoiApi?: string): Promise<Realm[]> {

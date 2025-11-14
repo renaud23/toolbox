@@ -5,7 +5,7 @@ export function postCreateUser(body: {
   storage: string
   username: string
   mail: string
-}) {
+}): Promise<boolean> {
   const uri = `${import.meta.env.VITE_PROXY_API}${createUserUri(body.realm, body.storage)}`
   return fetch(uri, {
     method: 'POST',

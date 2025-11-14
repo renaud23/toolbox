@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Box,
   Button,
+  Chip,
   Grid,
   MenuItem,
   Select,
@@ -24,39 +25,66 @@ const FormGrid = styled(Grid)(() => ({
 async function getRealmNames() {
   const realms = await getRealms()
 
-  return realms.map((r) => r.name)
+  const realmNames = realms.map((r) => r.name)
+  const storages = realms.reduce(
+    (acc, r) => {
+      const { name, userStorages } = r
+      return { ...acc, [name]: userStorages.map((us) => us.name) }
+    },
+    {} as Record<string, string[]>,
+  )
+
+  return { realmNames, storages }
+}
+
+function Result({ status }: { status: boolean | undefined }) {
+  if (status) {
+    return <Chip label="success" color="success" />
+  }
+  if (status === false) {
+    return <Chip label="error" color="error" />
+  }
+  return null
 }
 
 export function CreateUser() {
   const [username, setUsername] = useState<string>('ISABELLE_4')
   const [mail, setMail] = useState<string>('isabelle.ravel@insee.fr')
   const [password, setPassword] = useState<string>('is@Belle4')
-  const [realm, setRealm] = useState<string>()
+  const [realm, setRealm] = useState<string>('')
+  const [storages, setStorages] = useState<string[]>()
+  const [storage, setStorage] = useState<string>('')
+  const [status, setStatus] = useState<boolean | undefined>()
 
   const realms = useAsync(getRealmNames)
 
+  useEffect(() => {
+    if (realms && realm.length) {
+      setStorages(realms.storages[realm])
+    }
+  }, [realm, realms])
+
   async function onClick() {
-    if (username && mail && password && realm) {
-      const result = await postCreateUser({
+    setStatus(undefined)
+    let result = false,
+      result2 = false
+    if (username && mail && password && realm && storage.length) {
+      result = await postCreateUser({
         realm,
-        storage: 'default',
+        storage,
         username,
         mail,
       })
-        .then(() => {
-          return true
-        })
-        .catch((e) => {
-          console.error(e)
-        })
       if (result) {
-        await postInitPassword({
+        result2 = await postInitPassword({
           realm,
-          storage: 'default',
+          storage,
           username,
           password,
         })
       }
+
+      setStatus(result && result2)
     }
   }
 
@@ -72,12 +100,30 @@ export function CreateUser() {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           label="Age"
-          value={realm}
           onChange={(e: SelectChangeEvent<string>) => {
             setRealm(e.target.value)
           }}
+          value={realm}
         >
-          {realms?.map((r) => (
+          {realms?.realmNames.map((r) => (
+            <MenuItem key={r} value={r}>
+              {r}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormGrid>
+      <FormGrid size={{ xs: 12, md: 6 }}>
+        <Select
+          labelId="storages-label"
+          disabled={storages === undefined}
+          id="storages"
+          label="Storage"
+          value={storage}
+          onChange={(e: SelectChangeEvent<string>) => {
+            setStorage(e.target.value)
+          }}
+        >
+          {storages?.map((r) => (
             <MenuItem key={r} value={r}>
               {r}
             </MenuItem>
@@ -119,6 +165,7 @@ export function CreateUser() {
       <Button variant="contained" onClick={onClick}>
         Create
       </Button>
+      <Result status={status} />
     </Box>
   )
 }
