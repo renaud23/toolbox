@@ -17,3 +17,7 @@ export function initPasswordUri(
 export function createUserUri(realm: string, storage: string) {
   return `/v2/realms/${realm}/storages/${storage}/users`
 }
+
+export function gerRealmsUri() {
+  return '/v2/realms'
+}

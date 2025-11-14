@@ -12,6 +12,7 @@ const BASE_URI = process.env.VITE_SUGOI_API
 
 const log = console.log
 log('SUGOI base path', chalk.magenta.underline(BASE_URI))
+
 function chalkStatus(status: number) {
   const statusKind = Math.trunc(status / 100)
   if (statusKind === 2) {
@@ -26,10 +27,10 @@ app.use(cors())
 app.use(bodyParser.json())
 const port = 3000
 
-app.get('/', async (req, res) => {
+app.get('/*splat', async (req, res) => {
   const bearer = req.headers.authorization
   const uri = `${BASE_URI}${req.originalUrl}`
-  console.log('GET', `\x1b[32m ${uri} \x1b[0m`)
+
   const result = await fetch(uri, {
     headers: {
       Authorization: `${bearer}`,
@@ -38,7 +39,14 @@ app.get('/', async (req, res) => {
     method: 'GET',
   })
 
-  res.json(result)
+  log(
+    chalk.yellow(`${req.method}`),
+    chalk.underline.magenta(`${uri}`, chalkStatus(result.status)),
+  )
+  const body = await result.json()
+ 
+  res.status(result.status)
+  res.json(body)
 })
 
 app.post('/*splat', async (req, res) => {
@@ -59,10 +67,11 @@ app.post('/*splat', async (req, res) => {
     chalk.yellow(`${req.method}`),
     chalk.underline.magenta(`${uri}`, chalkStatus(result.status)),
   )
+
   res.status(result.status)
   res.json(result)
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  log(`Proxy app listening on port ${chalk.yellow(port)}`)
 })

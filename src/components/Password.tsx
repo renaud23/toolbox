@@ -1,7 +1,12 @@
 import { useState } from 'react'
 
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { IconButton, InputAdornment, OutlinedInput } from '@mui/material'
+import {
+  FormLabel,
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+} from '@mui/material'
 
 export function Password({
   onChange,
@@ -12,31 +17,34 @@ export function Password({
 }) {
   const [visibilty, setVisibility] = useState(false)
   return (
-    <OutlinedInput
-      id="password"
-      name="password"
-      type={visibilty ? 'text' : 'password'}
-      placeholder="Password"
-      autoComplete="password"
-      required
-      size="medium"
-      value={value}
-      onChange={onChange}
-      endAdornment={
-        <InputAdornment position="end">
-          <IconButton
-            aria-label="toggle password visibility"
-            onClick={() => {
-              setVisibility(!visibilty)
-            }}
-            onMouseDown={() => {
-              setVisibility(!visibilty)
-            }}
-          >
-            {visibilty ? <Visibility /> : <VisibilityOff />}
-          </IconButton>
-        </InputAdornment>
-      }
-    />
+    <>
+      <FormLabel htmlFor="password">Password</FormLabel>
+      <OutlinedInput
+        id="password"
+        name="password"
+        type={visibilty ? 'text' : 'password'}
+        placeholder="Password"
+        autoComplete="password"
+        required
+        size="medium"
+        value={value}
+        onChange={onChange}
+        endAdornment={
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={() => {
+                setVisibility(!visibilty)
+              }}
+              onMouseDown={() => {
+                setVisibility(!visibilty)
+              }}
+            >
+              {visibilty ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </InputAdornment>
+        }
+      />
+    </>
   )
 }
