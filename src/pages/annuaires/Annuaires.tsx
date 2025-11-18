@@ -19,20 +19,14 @@ export function Annuaires() {
             <ul>
               <li>
                 ihm :
-                <Link
-                  href="https://gestion-comptes-utilisateurs.recette.insee.fr/"
-                  target="_Blank"
-                >
-                  https://gestion-comptes-utilisateurs.recette.insee.fr/
+                <Link href={import.meta.env.VITE_SUGOI_IHM} target="_Blank">
+                  {import.meta.env.VITE_SUGOI_IHM}
                 </Link>
               </li>
               <li>
                 api :
-                <Link
-                  href=" https://api.gestion-comptes-utilisateurs.recette.insee.fr/"
-                  target="_Blank"
-                >
-                  https://api.gestion-comptes-utilisateurs.recette.insee.fr/
+                <Link href={import.meta.env.VITE_SUGOI_API} target="_Blank">
+                  {import.meta.env.VITE_SUGOI_API}
                 </Link>
               </li>
             </ul>

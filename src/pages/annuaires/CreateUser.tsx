@@ -48,9 +48,9 @@ function Result({ status }: { status: boolean | undefined }) {
 }
 
 export function CreateUser() {
-  const [username, setUsername] = useState<string>('ISABELLE_4')
-  const [mail, setMail] = useState<string>('isabelle.ravel@insee.fr')
-  const [password, setPassword] = useState<string>('is@Belle4')
+  const [username, setUsername] = useState<string>('T_ANOMALIE_')
+  const [password, setPassword] = useState<string>('T_ANOMALIE_')
+  const [mail, setMail] = useState<string>('')
   const [realm, setRealm] = useState<string>('')
   const [storages, setStorages] = useState<string[]>()
   const [storage, setStorage] = useState<string>('')
@@ -68,7 +68,7 @@ export function CreateUser() {
     setStatus(undefined)
     let result = false,
       result2 = false
-    if (username && mail && password && realm && storage.length) {
+    if (username && password && realm && storage.length) {
       result = await postCreateUser({
         realm,
         storage,
